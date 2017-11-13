@@ -1,7 +1,6 @@
 package model;
 
-
-import arapp.tensorflow.Utils;
+import com.rapplogic.tensorflow.Utils;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;

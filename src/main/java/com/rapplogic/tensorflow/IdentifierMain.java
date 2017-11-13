@@ -8,13 +8,15 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 public class IdentifierMain {
 
     /**
-     * Run with args: <path to mobilenet model> <path to image to process>
+     * Run with args: <path to mobilenet model> <directory of images to process>
      */
     public static void main(String[] args) throws Exception {
 
@@ -35,10 +37,22 @@ public class IdentifierMain {
                 100
         );
 
-        BufferedImage image = ImageIO.read(new File(args[1]));
+        for (Path path : Files.newDirectoryStream(FileSystems.getDefault().getPath(args[1]))) {
+            if (!path.getFileName().toString().toLowerCase().endsWith(".jpg")) {
+                continue;
+            }
 
-        List<Recognition> recognitions =  identifierProcessor.recognizeImage(image, 0.6f);
+            BufferedImage image = ImageIO.read(path.toFile());
 
-        System.out.println("Recognitions " + recognitions);
+            List<Recognition> recognitions =  identifierProcessor.recognizeImage(image, 0.6f);
+
+            System.out.println("Recognitions for " + path.toString() + ": " + recognitions);
+
+            if (recognitions.size() > 0) {
+                TensorflowUtils.annotateImage(recognitions, image);
+                File annotated = new File(path.getFileName().toString() + "-annotated.jpg");
+                Files.write(annotated.toPath(), Utils.imageToBytes(image));
+            }
+        }
     }
 }

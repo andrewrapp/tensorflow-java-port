@@ -1,4 +1,4 @@
-package arapp.tensorflow;
+package com.rapplogic.tensorflow;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

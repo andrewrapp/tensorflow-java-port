@@ -8,7 +8,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 public class ClassifierMain {
@@ -28,10 +30,12 @@ public class ClassifierMain {
                 labels
         );
 
-        BufferedImage image = ImageIO.read(new File(args[1]));
+        for (Path path : Files.newDirectoryStream(FileSystems.getDefault().getPath(args[1]))) {
+            BufferedImage image = ImageIO.read(path.toFile());
 
-        List<Recognition> recognitions =  classifierProcessor.recognizeImage(image, 0.2f);
+            List<Recognition> recognitions =  classifierProcessor.recognizeImage(image, 0.2f);
 
-        System.out.println("Recognitions " + recognitions);
+            System.out.println("Recognitions for " + path.toString() + ": " + recognitions);
+        }
     }
 }

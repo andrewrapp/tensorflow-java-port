@@ -1,6 +1,5 @@
 package com.rapplogic.tensorflow;
 
-import arapp.tensorflow.Utils;
 import model.Recognition;
 import model.Rectangle;
 import org.slf4j.Logger;
